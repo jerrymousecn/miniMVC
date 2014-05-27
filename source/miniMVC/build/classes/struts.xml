@@ -1,0 +1,11 @@
+<!DOCTYPE struts PUBLIC
+"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+"http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+	<package name="myPack">
+		<action name="testAction" class="cn.jerry.mini_struts.action.TestAction">
+			<result name="success">success.jsp</result>
+		</action>
+	</package>
+</struts>
