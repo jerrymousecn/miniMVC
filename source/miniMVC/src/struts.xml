@@ -4,7 +4,7 @@
 
 <struts>
 	<package name="myPack">
-		<action name="testAction" class="cn.jerry.mini_struts.action.TestAction">
+		<action name="testAction" class="cn.jerry.mini_mvc.action.TestAction" method="execute">
 			<result name="success">success.jsp</result>
 		</action>
 	</package>

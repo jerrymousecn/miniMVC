@@ -1,4 +1,4 @@
-package cn.jerry.mini_struts;
+package cn.jerry.mini_mvc;
 
 import java.io.File;
 import java.util.HashMap;
@@ -36,11 +36,15 @@ public class ActionMappings {
 					Element actionNode = (Element) j.next();
 					String actionName = actionNode.attribute("name").getText();
 					String classPath = actionNode.attribute("class").getText();
+					String methodName = actionNode.attribute("method").getText();
+					if(methodName==null)
+						methodName = Constants.DEFAULT_METHOD_NAME;
 					action.setClassPath(classPath);
 					action.setName(actionName);
+					action.setMethodName(methodName);
 					Map<String, String> resultMap = new HashMap<String, String>();
-					for (Iterator k = actionNode.elementIterator("result"); k
-							.hasNext();) {
+					for (Iterator k = actionNode.elementIterator("result"); k.hasNext();)
+					{
 						Element resultNode = (Element) k.next();
 						String resultName = resultNode.attribute("name")
 								.getText();

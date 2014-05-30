@@ -1,4 +1,4 @@
-package cn.jerry.mini_struts;
+package cn.jerry.mini_mvc;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,6 +24,10 @@ public class ActionContext {
 	public void setAttriInRequest(String key,String value)
 	{
 		request.setAttribute(key,value);
+	}
+	public void setAttriInSession(String key,String value)
+	{
+		request.getSession().setAttribute(key,value);
 	}
 	public static void clearUp()
 	{

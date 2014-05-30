@@ -1,4 +1,4 @@
-package cn.jerry.mini_struts;
+package cn.jerry.mini_mvc;
 import java.io.File;
 import java.io.IOException;
 
@@ -40,7 +40,11 @@ public class MiniMVCFilter implements Filter {
 			{
 				filterChain.doFilter(servletRequest, servletResponse);
 			}
-		} finally {
+		}catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		finally {
 			ActionContext.clearUp();
 		}
 	}

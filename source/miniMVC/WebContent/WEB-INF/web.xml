@@ -3,7 +3,7 @@
   <display-name>miniMVC</display-name>
   <filter>
     <filter-name>miniMVC</filter-name>
-    <filter-class>cn.jerry.mini_struts.MiniMVCFilter</filter-class>
+    <filter-class>cn.jerry.mini_mvc.MiniMVCFilter</filter-class>
     <init-param>
       <param-name>config</param-name>
       <param-value>struts.xml</param-value>
@@ -14,11 +14,6 @@
     <url-pattern>/*</url-pattern>
   </filter-mapping>
   <welcome-file-list>
-    <welcome-file>index.html</welcome-file>
-    <welcome-file>index.htm</welcome-file>
     <welcome-file>index.jsp</welcome-file>
-    <welcome-file>default.html</welcome-file>
-    <welcome-file>default.htm</welcome-file>
-    <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
 </web-app>

@@ -1,4 +1,4 @@
-package cn.jerry.mini_struts;
+package cn.jerry.mini_mvc;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -15,7 +15,8 @@ public class Action {
 	private String classPath;
 	private Map<String,String> resultMap;
 	private Map<String,String> requestDataMap;
-	private String methodName = "execute";
+	private Map<String,String> sessionDataMap;
+	private String methodName;
 	public String getName() {
 		return name;
 	}
@@ -44,19 +45,15 @@ public class Action {
 	{
 		return "";
 	}
-	public String invokemethod()
+	public String invokemethod() throws Exception
 	{
-		String redirectPagePath = null; 
-		try {
-			Class class1 = Class.forName(classPath);
-			Object obj = class1.newInstance();
-			injectData(obj);
-			Method method = class1.getMethod(methodName);
-			String result = (String)method.invoke(obj);
-			redirectPagePath = resultMap.get(result);
-		} catch (Exception e) {
-			e.printStackTrace();
-		} 
+		String redirectPagePath = null;
+		Class class1 = Class.forName(classPath);
+		Object obj = class1.newInstance();
+		injectData(obj);
+		Method method = class1.getMethod(methodName);
+		String result = (String) method.invoke(obj);
+		redirectPagePath = resultMap.get(result);
 		return redirectPagePath;
 	}
 	private void injectData(Object obj)
@@ -90,6 +87,12 @@ public class Action {
 	public void setRequestDataMap(Map<String, String> requestDataMap) {
 		this.requestDataMap = requestDataMap;
 	}
+	public Map<String, String> getSessionDataMap() {
+		return sessionDataMap;
+	}
+	public void setSessionDataMap(Map<String, String> sessionDataMap) {
+		this.sessionDataMap = sessionDataMap;
+	}
 	public void setRequest(HttpServletRequest request)
 	{
 		Map<String,String> map = new HashMap<String,String>();
@@ -100,7 +103,6 @@ public class Action {
 		{
 			String key = (String)iter.next();
 			String[] valueArr = (String[])requestParameterMap.get(key);
-			System.out.println("key: "+key);
 			map.put(key, valueArr[0]);
 		}
 		setRequestDataMap(map);
