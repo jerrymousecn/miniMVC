@@ -48,10 +48,18 @@ public class Action {
 	public String invokemethod() throws Exception
 	{
 		String redirectPagePath = null;
-		Class class1 = Class.forName(classPath);
-		Object obj = class1.newInstance();
+		Class clazz;
+		Object obj = null;
+		try {
+			clazz = Class.forName(classPath);
+			obj = clazz.newInstance();
+		} catch (Exception e) {
+			BeanFactory beanFactory = BeanFactory.getInstance();
+			obj = beanFactory.getBean(classPath);
+			clazz = obj.getClass();
+		}
 		injectData(obj);
-		Method method = class1.getMethod(methodName);
+		Method method = clazz.getMethod(methodName);
 		String result = (String) method.invoke(obj);
 		redirectPagePath = resultMap.get(result);
 		return redirectPagePath;

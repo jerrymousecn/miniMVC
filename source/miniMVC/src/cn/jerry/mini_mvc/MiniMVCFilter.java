@@ -17,6 +17,7 @@ import org.dom4j.DocumentException;
 
 public class MiniMVCFilter implements Filter {
 	private ActionMappings actionMappings;
+	private BeanFactory beanFactory;
 	@Override
 	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse,
 			FilterChain filterChain) throws IOException, ServletException {
@@ -67,16 +68,35 @@ public class MiniMVCFilter implements Filter {
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
-		String realPath = filterConfig.getServletContext().getRealPath("/");
-		String strutsConfigPath = filterConfig.getInitParameter("config");
-		String configPathFullPath = realPath +"WEB-INF"+File.separatorChar+"classes"+File.separatorChar+strutsConfigPath;
+		initActionMapping(filterConfig);
+		initBeanParser(filterConfig);
+	}
+	private void initActionMapping(FilterConfig filterConfig)
+	{
+		String configPath = filterConfig.getInitParameter("config");
+		String configFullPath = getFullPath(filterConfig,configPath);
 		actionMappings = ActionMappings.getInstance();
 		try {
-			actionMappings.init(configPathFullPath);
+			actionMappings.init(configFullPath);
 		} catch (DocumentException e) {
 			e.printStackTrace();
 		}
-
+	}
+	private void initBeanParser(FilterConfig filterConfig)
+	{
+		String beanConfigPath = filterConfig.getInitParameter("bean-config");
+		String beanConfigFullPath = getFullPath(filterConfig,beanConfigPath);
+		beanFactory = BeanFactory.getInstance();
+		try {
+			beanFactory.init(beanConfigFullPath);
+		} catch (DocumentException e) {
+			e.printStackTrace();
+		}
+	}
+	private String getFullPath(FilterConfig filterConfig,String relativePath)
+	{
+		String realPath = filterConfig.getServletContext().getRealPath("/");
+		return realPath +"WEB-INF"+File.separatorChar+"classes"+File.separatorChar+relativePath;
 	}
 	private String getActionName(String shortUri)
 	{

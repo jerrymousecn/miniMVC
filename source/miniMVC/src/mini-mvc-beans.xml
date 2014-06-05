@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans>
+	<bean name="testAction" class="cn.jerry.mini_mvc.action.TestAction"
+		scope="prototype">
+		<property name="testDao" ref="testDao1"></property>
+	</bean>
+	<bean name="testDao1" class="cn.jerry.mini_mvc.dao.TestDao" scope="prototype">
+	</bean>
+</beans>
