@@ -14,10 +14,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.dom4j.DocumentException;
 
+import cn.jerry.mini_mvc.aop.AopProxyFactory;
+
 
 public class MiniMVCFilter implements Filter {
 	private ActionMappings actionMappings;
-	private BeanFactory beanFactory;
+	private ObjectFactory objectFactory;
 	@Override
 	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse,
 			FilterChain filterChain) throws IOException, ServletException {
@@ -32,6 +34,7 @@ public class MiniMVCFilter implements Filter {
 				String actionName = getActionName(shortUri);
 				Action action = actionMappings.getAction(actionName);
 				action.setRequest(request);
+				action.setObjectFactory(objectFactory);
 				
 				String redirectPagePath = action.invokemethod();
 				RequestDispatcher dispatcher = request.getRequestDispatcher(redirectPagePath);
@@ -86,9 +89,10 @@ public class MiniMVCFilter implements Filter {
 	{
 		String beanConfigPath = filterConfig.getInitParameter("bean-config");
 		String beanConfigFullPath = getFullPath(filterConfig,beanConfigPath);
-		beanFactory = BeanFactory.getInstance();
+//		beanFactory = BeanFactory.getInstance();
+		objectFactory = AopProxyFactory.getInstance();
 		try {
-			beanFactory.init(beanConfigFullPath);
+			objectFactory.init(beanConfigFullPath);
 		} catch (DocumentException e) {
 			e.printStackTrace();
 		}

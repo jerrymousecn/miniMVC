@@ -1,7 +1,7 @@
-package cn.jerry.mini_mvc.action;
+package cn.jerry.mini_mvc.example.action;
 
 import cn.jerry.mini_mvc.ActionContext;
-import cn.jerry.mini_mvc.dao.ITestDao;
+import cn.jerry.mini_mvc.example.dao.ITestDao;
 
 public class TestAction {
 	private ITestDao testDao;

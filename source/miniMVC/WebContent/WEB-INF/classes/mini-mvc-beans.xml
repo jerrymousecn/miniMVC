@@ -1,9 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans>
-	<bean name="testAction" class="cn.jerry.mini_mvc.action.TestAction"
+	<bean name="testAction" class="cn.jerry.mini_mvc.example.action.TestAction"
 		scope="prototype">
-		<property name="testDao" ref="testDao1"></property>
+		<property name="testDao" ref="testDao"></property>
 	</bean>
-	<bean name="testDao1" class="cn.jerry.mini_mvc.dao.TestDao" scope="prototype">
+	<bean name="testDao" class="cn.jerry.mini_mvc.example.dao.TestDao"
+		scope="singleton">
+		<property name="configFile" value="d:/1.txt"></property>
 	</bean>
+	<bean name="aop_before" class="cn.jerry.mini_mvc.aop.example.BeforeAdviceImpl1" />
+	<bean name="aop_after" class="cn.jerry.mini_mvc.aop.example.AfterAdviceImpl1" />
+	<bean name="aop_around" class="cn.jerry.mini_mvc.aop.example.AroundAdviceImpl1" />
+	<aop>
+		<aspect id="pointcut2" classes="cn.*action*" method="execute">
+			<before bean-ref="aop_before" />
+			<after bean-ref="aop_after" />
+			<around bean-ref="aop_around" />
+		</aspect>
+	</aop>
+
 </beans>

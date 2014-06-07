@@ -1,52 +1,71 @@
 package cn.jerry.mini_mvc;
 
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-
 import org.dom4j.DocumentException;
-
 import cn.jerry.mini_mvc.parser.BeanParser;
 
-public class BeanFactory {
+public class BeanFactory implements ObjectFactory{
 	private static BeanFactory beanFactory = new BeanFactory();
-	private BeanFactory() {
+	private Map<String,Object> singletonMap = new HashMap<String,Object>();
+	protected BeanFactory() {
 	}
 	public static BeanFactory getInstance() {
 		return beanFactory;
 	}
 	private Map<String,Bean> beanMap = new HashMap<String,Bean>();
+	
+	@Override
 	public void init(String configFile) throws DocumentException
 	{
 		BeanParser beanParser = new BeanParser();
 		beanParser.init(configFile);
 		beanMap = beanParser.getBeanMap();
 	}
-	public Object getBean(String beanName) throws InstantiationException, IllegalAccessException, ClassNotFoundException, IllegalArgumentException, SecurityException, NoSuchFieldException
+	@Override
+	public Object getBean(String beanName) throws Exception
 	{
+		if(singletonMap.get(beanName)!=null)
+			return singletonMap.get(beanName);
 		Bean bean = beanMap.get(beanName);
 		String classPath = bean.getClassPath();
 		Object obj = Class.forName(classPath).newInstance();
-		if(bean.hasRefBeans())
+		if(bean.hasProperties())
 		{
-			Map<String, String> map = bean.getRefBeanMap();
-			for(Entry<String,String> entry : map.entrySet())
+			Map<String, BeanProperty> map = bean.getPropertyMap();
+			for(Entry<String,BeanProperty> entry : map.entrySet())
 			{
 				String propertyName = entry.getKey();
-				String refBeanName = entry.getValue();
-				Object refBean = getBean(refBeanName);
-				setBean(obj,propertyName,refBean);
+				BeanProperty beanProperty = entry.getValue();
+				Object beanInProperty;
+				if(beanProperty.hasRefToOtherBean())
+				{
+					beanInProperty = getBean(beanProperty.getRefBeanName());
+				}
+				else
+				{
+					beanInProperty = beanProperty.getValue();
+				}
+				setBean(obj,propertyName,beanInProperty);
 			}
-			
+		}
+		if(bean.isSingleton())
+		{
+			saveSingletonBean(beanName, obj);
 		}
 		return obj;
 	}
-	public void setBean(Object obj,String propertyName,Object valueObj) throws IllegalArgumentException, IllegalAccessException, SecurityException, NoSuchFieldException
+	private void saveSingletonBean(String beanName,Object obj)
 	{
-		Class clazz = obj.getClass();
-		Field field = clazz.getDeclaredField(propertyName);
-		field.setAccessible(true);
-		field.set(obj, valueObj);
+		singletonMap.put(beanName, obj);
+	}
+	public void setBean(Object obj,String fieldName,Object fieldValue) throws IllegalArgumentException, IllegalAccessException, SecurityException, NoSuchFieldException
+	{
+		BeanUtil.setBeanProperty(obj, fieldName, fieldValue);
+//		Class clazz = obj.getClass();
+//		Field field = clazz.getDeclaredField(fieldName);
+//		field.setAccessible(true);
+//		field.set(obj, fieldValue);
 	}
 }

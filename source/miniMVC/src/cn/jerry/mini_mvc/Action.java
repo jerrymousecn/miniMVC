@@ -17,6 +17,7 @@ public class Action {
 	private Map<String,String> requestDataMap;
 	private Map<String,String> sessionDataMap;
 	private String methodName;
+	private ObjectFactory objectFactory;
 	public String getName() {
 		return name;
 	}
@@ -54,13 +55,13 @@ public class Action {
 			clazz = Class.forName(classPath);
 			obj = clazz.newInstance();
 		} catch (Exception e) {
-			BeanFactory beanFactory = BeanFactory.getInstance();
-			obj = beanFactory.getBean(classPath);
+			obj = objectFactory.getBean(classPath);
 			clazz = obj.getClass();
 		}
 		injectData(obj);
-		Method method = clazz.getMethod(methodName);
-		String result = (String) method.invoke(obj);
+//		Method method = clazz.getMethod(methodName);
+//		String result = (String) method.invoke(obj);
+		String result = (String)BeanUtil.invokeMethod(obj, methodName);
 		redirectPagePath = resultMap.get(result);
 		return redirectPagePath;
 	}
@@ -75,19 +76,9 @@ public class Action {
 			injectData(obj,key,value);
 		}
 	}
-	private void injectData(Object obj,String filedName,Object fieldValue)
+	private void injectData(Object obj,String fieldName,Object fieldValue)
 	{
-		try {
-			Class class1 = Class.forName(classPath);
-			Field field = class1.getDeclaredField(filedName);
-			if(field!=null)
-			{
-				field.setAccessible(true);
-				field.set(obj, fieldValue);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} 
+		BeanUtil.setBeanProperty(obj, fieldName, fieldValue);
 	}
 	public Map<String, String> getRequestDataMap() {
 		return requestDataMap;
@@ -115,5 +106,7 @@ public class Action {
 		}
 		setRequestDataMap(map);
 	}
-	
+	public void setObjectFactory(ObjectFactory objectFactory) {
+		this.objectFactory = objectFactory;
+	}
 }

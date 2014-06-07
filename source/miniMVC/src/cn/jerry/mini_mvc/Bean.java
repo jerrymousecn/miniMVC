@@ -7,7 +7,7 @@ public class Bean {
 	private String name;
 	private String classPath;
 	private String scope;
-	private Map<String,String> refBeanMap = new HashMap<String,String>();
+	private Map<String,BeanProperty> propertyMap = new HashMap<String,BeanProperty>();
 	public String getName() {
 		return name;
 	}
@@ -26,19 +26,34 @@ public class Bean {
 	public void setScope(String scope) {
 		this.scope = scope;
 	}
-	public boolean hasRefBeans()
+	public boolean hasProperties()
 	{
-		if(refBeanMap==null || refBeanMap.size()==0)
+		if(propertyMap==null || propertyMap.size()==0)
 		{
 			return false;
 		}
-		return true;
+		else
+		{
+			return true;
+		}
 	}
-	public void addRefBean(String propertyName,String refBeanName)
+	public void addProperty(String propertyName,BeanProperty beanProperty)
 	{
-		refBeanMap.put(propertyName, refBeanName);
+		propertyMap.put(propertyName, beanProperty);
 	}
-	public Map<String, String> getRefBeanMap() {
-		return refBeanMap;
+	public Map<String, BeanProperty> getPropertyMap() {
+		return propertyMap;
 	}
+	public boolean isSingleton()
+	{
+		if(Constants.SCOPE_SINGLETON.equals(scope))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
 }
