@@ -19,6 +19,8 @@ public class BeanParserWithAOP {
 		File file = new File(configFile);
 		Document document = reader.read(file);
 		Element root = document.getRootElement().element("aop");
+		if(root==null)
+			return;
 		for (Iterator i = root.elementIterator("aspect"); i.hasNext();) {
 			AopAspect aopAspect = new AopAspect();
 			Element beanNode = (Element) i.next();

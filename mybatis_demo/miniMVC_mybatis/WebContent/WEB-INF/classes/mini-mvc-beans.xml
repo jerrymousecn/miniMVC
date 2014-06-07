@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans>
+	<bean name="mybatisSessionFactory"
+		class="cn.jerry.mini_mvc.plugins.mybatis.MybatisSessionFactoryImpl"
+		scope="singleton">
+		<property name="configFile"
+			value="cn/jerry/mini_mvc/example/config/ibatisConfiguration.xml" />
+	</bean>
+	<bean name="studentAction" class="cn.jerry.mini_mvc.example.action.StudentAction"
+		scope="prototype">
+		<property name="studentDao" ref="studentDao"></property>
+	</bean>
+	<bean name="studentDao" class="cn.jerry.mini_mvc.example.dao.StudentDaoImpl"
+		scope="singleton">
+		<property name="mybatisSessionFactory" ref="mybatisSessionFactory" />
+	</bean>
+</beans>
