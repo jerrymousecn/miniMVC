@@ -4,7 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class ActionContext {
-	private static ThreadLocal<ActionContext> ctx= new ThreadLocal<ActionContext>();
+	private static ThreadLocal<ActionContext> ctx = new ThreadLocal<ActionContext>();
 	private HttpServletRequest request;
 	private HttpServletResponse response;
 	public ActionContext(HttpServletRequest request,HttpServletResponse response)

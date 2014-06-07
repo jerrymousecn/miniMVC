@@ -14,8 +14,6 @@ public class BeanUtil {
 				try {
 					field.setAccessible(true);
 					field.set(destinationBean, field.get(sourceBean));
-//					Object fieldValue = field.get(sourceBean);
-//					setBeanProperty(destinationBean,field.getName(),fieldValue);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

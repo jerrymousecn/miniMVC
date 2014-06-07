@@ -1,7 +1,5 @@
 package cn.jerry.mini_mvc;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -59,8 +57,6 @@ public class Action {
 			clazz = obj.getClass();
 		}
 		injectData(obj);
-//		Method method = clazz.getMethod(methodName);
-//		String result = (String) method.invoke(obj);
 		String result = (String)BeanUtil.invokeMethod(obj, methodName);
 		redirectPagePath = resultMap.get(result);
 		return redirectPagePath;

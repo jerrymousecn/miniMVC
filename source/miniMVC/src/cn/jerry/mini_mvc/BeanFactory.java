@@ -63,9 +63,5 @@ public class BeanFactory implements ObjectFactory{
 	public void setBean(Object obj,String fieldName,Object fieldValue) throws IllegalArgumentException, IllegalAccessException, SecurityException, NoSuchFieldException
 	{
 		BeanUtil.setBeanProperty(obj, fieldName, fieldValue);
-//		Class clazz = obj.getClass();
-//		Field field = clazz.getDeclaredField(fieldName);
-//		field.setAccessible(true);
-//		field.set(obj, fieldValue);
 	}
 }

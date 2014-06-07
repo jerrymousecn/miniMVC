@@ -6,7 +6,6 @@
 	</bean>
 	<bean name="testDao" class="cn.jerry.mini_mvc.example.dao.TestDao"
 		scope="singleton">
-		<property name="configFile" value="d:/1.txt"></property>
 	</bean>
 	<bean name="aop_before" class="cn.jerry.mini_mvc.aop.example.BeforeAdviceImpl1" />
 	<bean name="aop_after" class="cn.jerry.mini_mvc.aop.example.AfterAdviceImpl1" />
