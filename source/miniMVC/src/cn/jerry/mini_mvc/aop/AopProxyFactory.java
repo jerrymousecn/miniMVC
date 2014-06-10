@@ -6,7 +6,6 @@ import java.util.Map;
 import org.dom4j.DocumentException;
 
 import cn.jerry.mini_mvc.BeanFactory;
-import cn.jerry.mini_mvc.Constants;
 import cn.jerry.mini_mvc.ObjectFactory;
 
 public class AopProxyFactory implements ObjectFactory{

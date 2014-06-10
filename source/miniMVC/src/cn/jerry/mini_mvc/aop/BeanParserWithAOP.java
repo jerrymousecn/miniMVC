@@ -24,19 +24,16 @@ public class BeanParserWithAOP {
 		for (Iterator i = root.elementIterator("aspect"); i.hasNext();) {
 			AopAspect aopAspect = new AopAspect();
 			Element beanNode = (Element) i.next();
-			String aspectID = beanNode.attribute("id").getText();
-			String aspcetClasses = beanNode.attribute("classes").getText();
-			String aspcetMethod = beanNode.attribute("method").getText();
-			String beforeAdvice = null;
-			String afterAdvice = null;
-			String aroundAdvice = null;
-
+			String aspectID = getAttri(beanNode,"id");
+			String aspcetClasses = getAttri(beanNode,"classes");
+			String aspcetMethod = getAttri(beanNode,"method");
+			
 			Element beforeAdviceElement = beanNode.element("before");
 			Element afterAdviceElement = beanNode.element("after");
 			Element aroundAdviceElement = beanNode.element("around");
-			beforeAdvice = beforeAdviceElement.attribute("bean-ref").getText();
-			afterAdvice = afterAdviceElement.attribute("bean-ref").getText();
-			aroundAdvice = aroundAdviceElement.attribute("bean-ref").getText();
+			String beforeAdvice = getAttri(beforeAdviceElement,"bean-ref");
+			String afterAdvice = getAttri(afterAdviceElement,"bean-ref");
+			String aroundAdvice = getAttri(aroundAdviceElement,"bean-ref");
 
 			aopAspect.setId(aspectID);
 			aopAspect.setMethod(aspcetMethod);
@@ -59,16 +56,5 @@ public class BeanParserWithAOP {
 
 	public Map<String, AopAspect> getAopAspectMap() {
 		return aopAspectMap;
-	}
-
-	public static void main(String[] args) {
-		BeanParserWithAOP beanParserWithAOP = new BeanParserWithAOP();
-		try {
-			beanParserWithAOP
-					.init("E:\\workspace\\miniMVC\\src\\mini-mvc-beans.xml");
-		} catch (DocumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 }
