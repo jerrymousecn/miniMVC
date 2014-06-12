@@ -3,8 +3,12 @@ package cn.jerry.mini_mvc;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+
 import org.dom4j.DocumentException;
+
+import cn.jerry.mini_mvc.parser.XMLBean;
 import cn.jerry.mini_mvc.parser.BeanParser;
+import cn.jerry.mini_mvc.parser.XMLBeanProperty;
 
 public class BeanFactory implements ObjectFactory{
 	private static BeanFactory beanFactory = new BeanFactory();
@@ -14,7 +18,7 @@ public class BeanFactory implements ObjectFactory{
 	public static BeanFactory getInstance() {
 		return beanFactory;
 	}
-	private Map<String,Bean> beanMap = new HashMap<String,Bean>();
+	private Map<String,XMLBean> beanMap = new HashMap<String,XMLBean>();
 	
 	@Override
 	public void init(String configFile) throws DocumentException
@@ -23,25 +27,44 @@ public class BeanFactory implements ObjectFactory{
 		beanParser.init(configFile);
 		beanMap = beanParser.getBeanMap();
 	}
+	public XMLBean getBean(String beanName) throws Exception {
+		XMLBean bean = beanMap.get(beanName);
+		return bean;
+	}
 	@Override
-	public Object getBean(String beanName) throws Exception
+	public Object getInstance(Object obj) throws Exception {
+		return obj;
+	}
+	@Override
+	public Object getInstanceByBeanName(String beanName) throws Exception
 	{
 		if(singletonMap.get(beanName)!=null)
 			return singletonMap.get(beanName);
-		Bean bean = beanMap.get(beanName);
-		String classPath = bean.getClassPath();
-		Object obj = Class.forName(classPath).newInstance();
+		XMLBean bean = beanMap.get(beanName);
+		String className = bean.getClassName();
+		Object obj = Class.forName(className).newInstance();
+		
+		injectObj(bean, obj);
+		
+		if(bean.isSingleton())
+		{
+			saveSingletonBean(beanName, obj);
+		}
+		return obj;
+	}
+	public void injectObj(XMLBean bean,Object obj) throws Exception
+	{
 		if(bean.hasProperties())
 		{
-			Map<String, BeanProperty> map = bean.getPropertyMap();
-			for(Entry<String,BeanProperty> entry : map.entrySet())
+			Map<String, XMLBeanProperty> map = bean.getPropertyMap();
+			for(Entry<String,XMLBeanProperty> entry : map.entrySet())
 			{
 				String propertyName = entry.getKey();
-				BeanProperty beanProperty = entry.getValue();
+				XMLBeanProperty beanProperty = entry.getValue();
 				Object beanInProperty;
 				if(beanProperty.hasRefToOtherBean())
 				{
-					beanInProperty = getBean(beanProperty.getRefBeanName());
+					beanInProperty = getInstanceByBeanName(beanProperty.getRefBeanName());
 				}
 				else
 				{
@@ -50,11 +73,6 @@ public class BeanFactory implements ObjectFactory{
 				setBean(obj,propertyName,beanInProperty);
 			}
 		}
-		if(bean.isSingleton())
-		{
-			saveSingletonBean(beanName, obj);
-		}
-		return obj;
 	}
 	private void saveSingletonBean(String beanName,Object obj)
 	{
@@ -64,4 +82,5 @@ public class BeanFactory implements ObjectFactory{
 	{
 		BeanUtil.setBeanProperty(obj, fieldName, fieldValue);
 	}
+	
 }

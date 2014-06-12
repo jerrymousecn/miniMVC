@@ -4,5 +4,6 @@ import org.dom4j.DocumentException;
 
 public interface ObjectFactory {
 	void init(String configFile) throws DocumentException;
-	Object getBean(String beanName) throws Exception;
+	Object getInstanceByBeanName(String beanName) throws Exception;
+	Object getInstance(Object obj) throws Exception;
 }

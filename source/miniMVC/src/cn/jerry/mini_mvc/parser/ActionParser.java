@@ -10,11 +10,10 @@ import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
-import cn.jerry.mini_mvc.Action;
 import cn.jerry.mini_mvc.Constants;
 
 public class ActionParser {
-	private Map<String, Action> actionMap = new HashMap<String, Action>();
+	private Map<String, XMLAction> actionMap = new HashMap<String, XMLAction>();
 
 	public void init(String configFile) throws DocumentException {
 		SAXReader reader = new SAXReader();
@@ -26,14 +25,14 @@ public class ActionParser {
 			Element packageNode = (Element) i.next();
 			for (Iterator j = packageNode.elementIterator("action"); j
 					.hasNext();) {
-				Action action = new Action();
+				XMLAction action = new XMLAction();
 				Element actionNode = (Element) j.next();
 				String actionName = actionNode.attribute("name").getText();
-				String classPath = actionNode.attribute("class").getText();
+				String className = actionNode.attribute("class").getText();
 				String methodName = actionNode.attribute("method").getText();
 				if (methodName == null)
 					methodName = Constants.DEFAULT_METHOD_NAME;
-				action.setClassPath(classPath);
+				action.setClassName(className);
 				action.setName(actionName);
 				action.setMethodName(methodName);
 				Map<String, String> resultMap = new HashMap<String, String>();
@@ -50,7 +49,7 @@ public class ActionParser {
 		}
 	}
 
-	public Map<String, Action> getActionMap() {
+	public Map<String, XMLAction> getActionMap() {
 		return actionMap;
 	}
 }

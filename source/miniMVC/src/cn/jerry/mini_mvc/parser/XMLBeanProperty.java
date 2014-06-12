@@ -1,11 +1,11 @@
-package cn.jerry.mini_mvc;
+package cn.jerry.mini_mvc.parser;
 
-public class BeanProperty {
+public class XMLBeanProperty {
 	private String name;
 	private String refBeanName;
 	private String value;
-	public BeanProperty(){}
-	public BeanProperty(String name,String refBeanName,String value)
+	public XMLBeanProperty(){}
+	public XMLBeanProperty(String name,String refBeanName,String value)
 	{
 		this.name = name;
 		this.refBeanName = refBeanName;

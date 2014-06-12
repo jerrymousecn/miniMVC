@@ -1,24 +1,26 @@
-package cn.jerry.mini_mvc;
+package cn.jerry.mini_mvc.parser;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class Bean {
+import cn.jerry.mini_mvc.Constants;
+
+public class XMLBean {
 	private String name;
-	private String classPath;
+	private String className;
 	private String scope;
-	private Map<String,BeanProperty> propertyMap = new HashMap<String,BeanProperty>();
+	private Map<String,XMLBeanProperty> propertyMap = new HashMap<String,XMLBeanProperty>();
 	public String getName() {
 		return name;
 	}
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getClassPath() {
-		return classPath;
+	public String getClassName() {
+		return className;
 	}
-	public void setClassPath(String classPath) {
-		this.classPath = classPath;
+	public void setClassName(String className) {
+		this.className = className;
 	}
 	public String getScope() {
 		return scope;
@@ -37,11 +39,11 @@ public class Bean {
 			return true;
 		}
 	}
-	public void addProperty(String propertyName,BeanProperty beanProperty)
+	public void addProperty(String propertyName,XMLBeanProperty beanProperty)
 	{
 		propertyMap.put(propertyName, beanProperty);
 	}
-	public Map<String, BeanProperty> getPropertyMap() {
+	public Map<String, XMLBeanProperty> getPropertyMap() {
 		return propertyMap;
 	}
 	public boolean isSingleton()

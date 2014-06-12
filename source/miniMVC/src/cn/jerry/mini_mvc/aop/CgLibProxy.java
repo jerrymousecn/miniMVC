@@ -16,25 +16,33 @@ public class CgLibProxy extends BaseProxy implements MethodInterceptor {
 	}
 	
 	public Object getInstance(Object targetObj) {
-		this.targetObj = targetObj;
+		setTargetObj(targetObj);
 		Enhancer enhancer = new Enhancer();
-		enhancer.setSuperclass(this.targetObj.getClass());
+		enhancer.setSuperclass(targetObj.getClass());
 		enhancer.setCallback(this);
 		Object proxyObj =  enhancer.create();
 		BeanUtil.copyBeanProperties(targetObj, proxyObj);
+		return proxyObj;
+	}
+	public Object getInstance(Class targetClass) {
+		setTargetClass(targetClass);
+		Enhancer enhancer = new Enhancer();
+		enhancer.setSuperclass(targetClass);
+		enhancer.setCallback(this);
+		Object proxyObj =  enhancer.create();
 		return proxyObj;
 	}
 
 	@Override
 	public Object intercept(Object proxyObj, Method method, Object[] args,
 			MethodProxy proxy) throws Throwable {
-		initAdvices(targetObj, proxyObj, method, args);
+		initAdvices(getTargetClass(), proxyObj, method, args);
 		
-		execBeforeAdvice(targetObj, proxyObj, method, args);
-		execAroundBeforeAdvice(targetObj, proxyObj, method, args);
+		execBeforeAdvice(getTargetClass(), proxyObj, method, args);
+		execAroundBeforeAdvice(getTargetClass(), proxyObj, method, args);
 		Object resultObj = proxy.invokeSuper(proxyObj, args);
-		execAroundAfterAdvice(targetObj, proxyObj, method, args);
-		execAfterAdvice(targetObj, proxyObj, method, args);
+		execAroundAfterAdvice(getTargetClass(), proxyObj, method, args);
+		execAfterAdvice(getTargetClass(), proxyObj, method, args);
 		return resultObj;
 	}
 }

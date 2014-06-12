@@ -9,20 +9,20 @@ public class AroundAdviceImpl1 implements AroundAdvice {
 	private Date enterMethodTime;
 	private Date leaveMethodTime;
 	@Override
-	public void before(Object targetObj, Object proxyObj, Method method,
+	public void before(Class targetClass, Object proxyObj, Method method,
 			Object[] args) {
 		enterMethodTime = new Date();
 		StringBuffer sb = new StringBuffer();
 		sb.append(this.getClass().getSimpleName());
 		sb.append(" targetObj: ");
-		sb.append(targetObj.getClass().getSimpleName());
+		sb.append(targetClass.getSimpleName());
 		sb.append(" method: ");
 		sb.append(method.getName());
 		System.out.println(sb.toString());
 	}
 	
 	@Override
-	public void after(Object targetObj, Object proxyObj, Method method,
+	public void after(Class targetClass, Object proxyObj, Method method,
 			Object[] args) {
 		
 		leaveMethodTime = new Date();
@@ -30,7 +30,7 @@ public class AroundAdviceImpl1 implements AroundAdvice {
 		StringBuffer sb = new StringBuffer();
 		sb.append(this.getClass().getSimpleName());
 		sb.append(" targetObj: ");
-		sb.append(targetObj.getClass().getSimpleName());
+		sb.append(targetClass.getSimpleName());
 		sb.append(" method: ");
 		sb.append(method.getName());
 		System.out.println(sb.toString());

@@ -9,7 +9,8 @@ import java.util.regex.Pattern;
 import cn.jerry.mini_mvc.BeanFactory;
 
 public abstract class BaseProxy {
-	protected Object targetObj;
+	private Class targetClass;
+	private Object targetObj;
 	protected BeforeAdvice beforeAdvice;
 	protected AfterAdvice afterAdvice;
 	protected AroundAdvice aroundAdvice;
@@ -25,11 +26,11 @@ public abstract class BaseProxy {
 		aroundAdvice = null;
 	}
 
-	protected void initAdvices(Object targetObj, Object proxyObj,
+	protected void initAdvices(Class targetClass, Object proxyObj,
 			Method method, Object[] args) throws Exception {
 		resetAdvices();
 		
-		String classFullPath = targetObj.getClass().getCanonicalName();
+		String classFullPath = targetClass.getCanonicalName();
 		String methodName = method.getName();
 		for (Entry<String, AopAspect> entry : aopAspectMap.entrySet()) {
 			AopAspect aopAspect = entry.getValue();
@@ -38,9 +39,9 @@ public abstract class BaseProxy {
 			if(isMatch(classFullPath, methodName, classPattern, methodPattern))
 			{
 				BeanFactory beanFactory = BeanFactory.getInstance();
-				beforeAdvice = (BeforeAdvice)beanFactory.getBean(aopAspect.getBeforeAdvice());
-				afterAdvice = (AfterAdvice)beanFactory.getBean(aopAspect.getAfterAdvice());
-				aroundAdvice = (AroundAdvice)beanFactory.getBean(aopAspect.getAroundAdvice());
+				beforeAdvice = (BeforeAdvice)beanFactory.getInstanceByBeanName(aopAspect.getBeforeAdvice());
+				afterAdvice = (AfterAdvice)beanFactory.getInstanceByBeanName(aopAspect.getAfterAdvice());
+				aroundAdvice = (AroundAdvice)beanFactory.getInstanceByBeanName(aopAspect.getAroundAdvice());
 				break;
 			}
 		}
@@ -88,13 +89,14 @@ public abstract class BaseProxy {
 		return inputPattern.replaceAll("\\*", ".*");
 	}
 
-	public abstract Object getInstance(Object targetObj);
+	public abstract Object getInstance(Class targetClass);
+	public abstract Object getInstance(Object obj);
 
-	protected void execBeforeAdvice(Object targetObj, Object proxyObj,
+	protected void execBeforeAdvice(Class targetClass, Object proxyObj,
 			Method method, Object[] args) {
 		try {
 			if (beforeAdvice != null)
-				beforeAdvice.before(targetObj, proxyObj, method, args);
+				beforeAdvice.before(targetClass, proxyObj, method, args);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -104,31 +106,31 @@ public abstract class BaseProxy {
 		return false;
 	}
 
-	protected void execAfterAdvice(Object targetObj, Object proxyObj,
+	protected void execAfterAdvice(Class targetClass, Object proxyObj,
 			Method method, Object[] args) {
 		try {
 			if (afterAdvice != null)
-				afterAdvice.after(targetObj, proxyObj, method, args);
+				afterAdvice.after(targetClass, proxyObj, method, args);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	protected void execAroundBeforeAdvice(Object targetObj, Object proxyObj,
+	protected void execAroundBeforeAdvice(Class targetClass, Object proxyObj,
 			Method method, Object[] args) {
 		try {
 			if (aroundAdvice != null)
-				aroundAdvice.before(targetObj, proxyObj, method, args);
+				aroundAdvice.before(targetClass, proxyObj, method, args);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	protected void execAroundAfterAdvice(Object targetObj, Object proxyObj,
+	protected void execAroundAfterAdvice(Class targetClass, Object proxyObj,
 			Method method, Object[] args) {
 		try {
 			if (aroundAdvice != null)
-				aroundAdvice.after(targetObj, proxyObj, method, args);
+				aroundAdvice.after(targetClass, proxyObj, method, args);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -144,6 +146,19 @@ public abstract class BaseProxy {
 
 	public void setAroundAdvice(AroundAdvice aroundAdvice) {
 		this.aroundAdvice = aroundAdvice;
+	}
+	
+	protected Class getTargetClass() {
+		return targetClass;
+	}
+	protected void setTargetClass(Class targetClass) {
+		this.targetClass = targetClass;
+	}
+	protected Object getTargetObj() {
+		return targetObj;
+	}
+	protected void setTargetObj(Object targetObj) {
+		this.targetObj = targetObj;
 	}
 
 }

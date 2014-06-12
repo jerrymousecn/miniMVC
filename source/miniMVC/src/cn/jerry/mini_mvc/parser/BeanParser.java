@@ -10,11 +10,9 @@ import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
-import cn.jerry.mini_mvc.Bean;
-import cn.jerry.mini_mvc.BeanProperty;
 
 public class BeanParser {
-	private Map<String, Bean> beanMap = new HashMap<String, Bean>();
+	private Map<String, XMLBean> beanMap = new HashMap<String, XMLBean>();
 
 	public void init(String configFile) throws DocumentException {
 		SAXReader reader = new SAXReader();
@@ -23,22 +21,22 @@ public class BeanParser {
 		Document document = reader.read(file);
 		Element root = document.getRootElement();
 		for (Iterator i = root.elementIterator("bean"); i.hasNext();) {
-			Bean bean = new Bean();
+			XMLBean bean = new XMLBean();
 			Element beanNode = (Element) i.next();
 			String beanName = getAttri(beanNode, "name");
-			String beanClassPath = getAttri(beanNode, "class");
+			String beanClassName = getAttri(beanNode, "class");
 			String scope = getAttri(beanNode, "scope");
 			for (Iterator j = beanNode.elementIterator("property"); j.hasNext();) {
 				Element propertyNode = (Element) j.next();
 				String propertyName = getAttri(propertyNode, "name");
 				String refBeanName = getAttri(propertyNode, "ref");
 				String value = getAttri(propertyNode, "value");
-				BeanProperty beanProperty = new BeanProperty(propertyName,
+				XMLBeanProperty beanProperty = new XMLBeanProperty(propertyName,
 						refBeanName, value);
 				bean.addProperty(propertyName, beanProperty);
 			}
 			bean.setName(beanName);
-			bean.setClassPath(beanClassPath);
+			bean.setClassName(beanClassName);
 			bean.setScope(scope);
 			beanMap.put(beanName, bean);
 		}
@@ -52,7 +50,7 @@ public class BeanParser {
 		return value;
 	}
 
-	public Map<String, Bean> getBeanMap() {
+	public Map<String, XMLBean> getBeanMap() {
 		return beanMap;
 	}
 
